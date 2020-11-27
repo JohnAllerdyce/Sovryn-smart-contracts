@@ -6,6 +6,20 @@ test script for testing the loan token trading logic with 2 TestTokens.
 4. closing a margin trade position partially
 '''
 
+def test_getMarginBorrowAmountAndRate(loanToken, set_demand_curve, lend_to_pool):
+    set_demand_curve()
+    (receiver, _) = lend_to_pool()
+    deposit = 100e18
+    borrowAmount = loanToken.getMarginBorrowAmountAndRate(4e18, deposit)
+    print(borrowAmount)
+    monthly_interest = borrowAmount[1]*28/365
+    expectedAmount = (1e20 + monthly_interest)/100 * deposit*4 /1e18
+    print(expectedAmount)
+    borrow_amount =  deposit * 100 / (monthly_interest/1e18 +25 )
+    print(borrow_amount)
+    assert(False)
+
+
 #!/usr/bin/python3
 import pytest
 from loanToken.trading.shared_trading_functions import *

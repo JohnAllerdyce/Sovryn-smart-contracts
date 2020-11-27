@@ -14,7 +14,7 @@ def main():
     loadConfig()
     #call the function you want here
     #setupMarginLoanParams(contracts['WRBTC'], contracts['iDOCSettings'], contracts['iDOC'])
-    #testTradeOpeningAndClosing(contracts['protocol'], contracts['iDOC'], contracts['DoC'], contracts['WRBTC'], 1e18, 5e18, False, 0)
+    testTradeOpeningAndClosing(contracts['protocol'], contracts['iDOC'], contracts['DoC'], contracts['WRBTC'], 1e18, 5e18, True, 0)
     #setupMarginLoanParams(contracts['DoC'], contracts['iRBTCSettings'], contracts['iRBTC'])
     #testTradeOpeningAndClosing(contracts['protocol'], contracts['iRBTC'], contracts['WRBTC'], contracts['DoC'], 1e14, 5e18, True, 1e14)
     
@@ -62,10 +62,10 @@ def main():
     #deployGovernor()
     #readProposal(1)
     #readCurrentLock(acct)
-    readFromMedianizer()
+    #readFromMedianizer()
     #readFromPriceFeed()
     #readOwner(contracts['protocol'])
-    updateOracleAddress('0x26a00aF444928d689DDEC7b4D17c0E4a8c9D407d')
+    #updateOracleAddress('0x26a00aF444928d689DDEC7b4D17c0E4a8c9D407d')
     
 def loadConfig():
     global contracts, acct

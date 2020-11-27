@@ -6,15 +6,15 @@ import shared
 
 # returns a loan token with underlying token SUSD  
 @pytest.fixture(scope="module", autouse=True)
-def loanToken(LoanToken, LoanTokenLogicStandard, LoanTokenSettingsLowerAdmin, SUSD, WRBTC, accounts, sovryn, Constants, priceFeeds, swapsImpl):
+def loanToken(LoanToken, LoanTokenLogicTest, LoanTokenSettingsLowerAdmin, SUSD, WRBTC, accounts, sovryn, Constants, priceFeeds, swapsImpl):
 
-    loanTokenLogic = accounts[0].deploy(LoanTokenLogicStandard)
+    loanTokenLogic = accounts[0].deploy(LoanTokenLogicTest)
     #Deploying loan token using the loan logic as target for delegate calls
     loanToken = accounts[0].deploy(LoanToken, accounts[0], loanTokenLogic.address, sovryn.address, WRBTC.address)
     #Initialize loanTokenAddress
     loanToken.initialize(SUSD, "SUSD", "SUSD")
     #setting the logic ABI for the loan token contract
-    loanToken = Contract.from_abi("loanToken", address=loanToken.address, abi=LoanTokenLogicStandard.abi, owner=accounts[0])
+    loanToken = Contract.from_abi("loanToken", address=loanToken.address, abi=LoanTokenLogicTest.abi, owner=accounts[0])
 
     # loan token Price should be equals to initial price
     assert loanToken.tokenPrice() == loanToken.initialPrice()
@@ -121,7 +121,7 @@ def loan_pool_setup(accounts, RBTC, WRBTC, loanTokenSettings, loanToken, loanTok
 
 
 @pytest.fixture
-def set_demand_curve(loanToken, LoanToken, LoanTokenLogicStandard, LoanTokenSettingsLowerAdmin, accounts, loanTokenSettings):
+def set_demand_curve(loanToken, LoanToken, LoanTokenLogicTest, LoanTokenSettingsLowerAdmin, accounts, loanTokenSettings):
     def internal_set_demand_curve(baseRate=1e18, rateMultiplier=20.25e18, targetLevel=80*10**18, kinkLevel=90*10**18,
                                   maxScaleRate=100*10**18, loan_token_address=loanToken.address):
         local_loan_token = Contract.from_abi("loanToken", address=loanToken.address, abi=LoanToken.abi, owner=accounts[0])
@@ -130,13 +130,13 @@ def set_demand_curve(loanToken, LoanToken, LoanTokenLogicStandard, LoanTokenSett
                                                       abi=LoanTokenSettingsLowerAdmin.abi, owner=accounts[0])
         local_loan_token_settings.setDemandCurve(baseRate, rateMultiplier, baseRate, rateMultiplier, targetLevel,
                                                  kinkLevel, maxScaleRate)
-        loan_token_logic = accounts[0].deploy(LoanTokenLogicStandard)
+        loan_token_logic = accounts[0].deploy(LoanTokenLogicTest)
         local_loan_token = Contract.from_abi("loanToken", address=loan_token_address, abi=LoanToken.abi, owner=accounts[0])
         local_loan_token.setTarget(loan_token_logic.address)
-        Contract.from_abi("loanToken", address=loan_token_address, abi=LoanTokenLogicStandard.abi,
+        Contract.from_abi("loanToken", address=loan_token_address, abi=LoanTokenLogicTest.abi,
                           owner=accounts[0])
         borrow_interest_rate = loanToken.borrowInterestRate()
-        print("borrowInterestRate: ", borrow_interest_rate)
+        print("borrowInterestRate: ", borrow_interest_rate/1e18)
         assert (borrow_interest_rate > baseRate)
 
     return internal_set_demand_curve

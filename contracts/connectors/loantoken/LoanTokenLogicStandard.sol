@@ -786,7 +786,14 @@ contract LoanTokenLogicStandard is AdvancedToken {
             lastSettleTime_ = ts;
         }
     }
-
+    
+    /**
+     * @dev calculates the worth of the total deposit in loan tokens
+     * @param collateralTokenAddress the address of the collateral token address
+     * @param collateralTokenSent the amount of collateral tokens which were sent
+     * @param loanTokenSent the amount of loan token sent
+     * @return the total value in loan tokens
+     * */
     function _totalDeposit(
         address collateralTokenAddress,
         uint256 collateralTokenSent,
